@@ -10,6 +10,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<flow name="sampleFlow" doc:id="84c06c59-767f-4b04-8488-3040b3c4ae8c" >
 		<http:listener doc:name="Listener" doc:id="3fcf3d8a-721c-4b7e-b540-f8118e9e1a4b" config-ref="HTTP_Listener_config" path="/test"/>
 		<logger level="INFO" doc:name="Logger" doc:id="eeec5ca6-55f2-40c4-9f14-3db1a82156b2" message='"maven dependency issues resolved"'/>
-		<logger level="INFO" doc:name="Logger" doc:id="265d7ece-8fef-41dc-9bee-5db3545f6657" message='"resolving merge conflicts once for all"'/>
+		<logger level="INFO" doc:name="Logger" doc:id="265d7ece-8fef-41dc-9bee-5db3545f6657" message='"resolving merge conflicts"'/>
 	</flow>
 </mule>
