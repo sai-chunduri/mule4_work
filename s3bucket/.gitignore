@@ -1,0 +1,6 @@
+target/
+bin/
+.mule
+.project
+.classpath
+.DS_Store
