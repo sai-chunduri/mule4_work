@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="ba8d540e-ab71-4704-8b59-21463aa1afc4" >
-		<s3:connection accessKey="AKIA2P6VX4FHYISUNGFM" secretKey="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" region="us-east-2"/>
+		<s3:connection accessKey="1234" secretKey="1234" region="us-east-2"/>
 	</s3:config>
 	<flow name="s3bucketFlow" doc:id="b6c50acb-a346-4125-b34a-024fb2f36c3c" >
 		<http:listener doc:name="Listener" doc:id="2d66803f-759b-445c-983e-49defb264e6e" config-ref="HTTP_Listener_config" path="/countrecords"/>
