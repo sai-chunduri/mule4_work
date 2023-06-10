@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5270d925-9224-4cd0-934d-be9b4dcfe7ed" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="ba8d540e-ab71-4704-8b59-21463aa1afc4" >
-		<s3:connection accessKey="1234" secretKey="1234" region="us-east-2"/>
+		<s3:connection accessKey="${secure::devkey}" secretKey="${secure::devsecretkey}" region="us-east-2"/>
 	</s3:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="76ebcf63-3ffa-4e29-9bae-233680376dda" file="dev.yaml" key="bucketkeys" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
 	<flow name="s3bucketFlow" doc:id="b6c50acb-a346-4125-b34a-024fb2f36c3c" >
 		<http:listener doc:name="Listener" doc:id="2d66803f-759b-445c-983e-49defb264e6e" config-ref="HTTP_Listener_config" path="/countrecords"/>
 		<s3:list-objects doc:name="List Objects" doc:id="7e95aa75-aac0-4d56-8a35-e9d68e619c74" bucketName="female-oscars-data" config-ref="Amazon_S3_Configuration"/>
@@ -23,5 +27,6 @@ output application/json
 "number of objects/ files in s3 bucket": sizeOf(payload..key)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="52430828-88d4-4493-935d-8947e74c76a5" />
 	</flow>
 </mule>
