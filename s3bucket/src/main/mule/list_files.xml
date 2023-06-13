@@ -27,6 +27,5 @@ output application/json
 "number of objects/ files in s3 bucket": sizeOf(payload..key)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="52430828-88d4-4493-935d-8947e74c76a5" />
 	</flow>
 </mule>
