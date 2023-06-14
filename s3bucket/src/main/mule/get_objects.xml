@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get_json" doc:id="0efef7ec-08d3-4e83-a104-54e461e57e07" >
+		<http:listener doc:name="Listener" doc:id="366dc8b2-0398-4382-9e12-f0ea0df46ba3" config-ref="HTTP_Listener_config" path="/getjson"/>
+		<s3:get-object doc:name="Get Object" doc:id="f141ce34-ffb3-43a2-ba8e-3a8984115660" config-ref="Amazon_S3_Configuration" bucketName="female-oscars-data" key="marketing-campaigns.json"/>
+		<ee:transform doc:name="Transform Message" doc:id="835b84ee-ba6a-4d0f-b5a4-1ff5fd4ba535" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="cb1e7a29-e3f4-4958-9947-56ed86ed628e" >
+			<route >
+				<ee:transform doc:name="To CSV" doc:id="c1364780-30bf-4300-98b1-e8cc93a47f05" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<ee:transform doc:name="To XML" doc:id="6bfbbf18-f20b-47b1-92e2-6f0890d6ccde" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+data:{(payload map(value, index)-> {(
+	row: value
+	)}
+)}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<ee:transform doc:name="To JSON" doc:id="f47cc9c5-2ab1-44d6-aa4f-f47ed0e75596" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+			<route >
+				<ee:transform doc:name="To XLSX" doc:id="ca9bf1a9-b533-4067-a522-efa107d2fee9" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</route>
+		</scatter-gather>
+	</flow>
+</mule>
